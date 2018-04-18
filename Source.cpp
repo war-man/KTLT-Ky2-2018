@@ -12,8 +12,28 @@ struct SinhVien
 	char NgaySinh[100];
 	char HinhAnh[100];
 	char MoTa[100];
-	char SoThich[100];
+	char SoThich1[50];
+	char SoThich2[50];
 	char Email[20];
+};
+
+struct TenThayThe
+{
+	char s1[30];
+	char s2[30];
+	char s3[30];
+	char s4[30];
+	char s5[30];
+	char s6[30];
+	char s7[30];
+	char s8[50];
+	char s9[100];
+	char s10[30];
+	char s11[30];
+	char s12[30];
+	char s13[30];
+	char s14[30];
+	char s15[30];
 };
 
 char *docTungPhan(FILE* src, char *str, int maxSize)
@@ -26,7 +46,7 @@ char *docTungPhan(FILE* src, char *str, int maxSize)
 	do
 	{
 		ch = fgetc(src);
-		if (ch == '\n' || ch == EOF || ch == ',')
+		if (ch == '\n' || ch == EOF || ch == ';')
 			break;
 		if (len < maxSize)
 			str[len] = ch;
@@ -35,48 +55,63 @@ char *docTungPhan(FILE* src, char *str, int maxSize)
 	str[len] = 0;
 	return str;
 }
-
-int DocMotSinhVien(FILE* fp, SinhVien& sv)
+void DocMotSinhVien(FILE* fp, SinhVien& sv)
 {
 	char ch;
-	docTungPhan(fp, sv.MSSV, 7);
+	docTungPhan(fp, sv.MSSV, 10);
 
 	docTungPhan(fp, sv.HoTen, 30);
 
 	docTungPhan(fp, sv.Khoa, 30);
 
 	fscanf_s(fp, "%d", &sv.KhoaHoc);
-	ch = fgetc(fp);
+	fgetc(fp);
 
 	docTungPhan(fp, sv.NgaySinh, 10);
 
 	docTungPhan(fp, sv.HinhAnh, 50);
 
-	docTungPhan(fp, sv.MoTa, 50);
+	docTungPhan(fp, sv.MoTa, 100);
 
-	docTungPhan(fp, sv.SoThich, 50);
+	docTungPhan(fp, sv.SoThich1, 50);
+
+	docTungPhan(fp, sv.SoThich2, 50);
+
 
 	docTungPhan(fp, sv.Email, 20);
 
-
-	return 1;
 }
 
-void DanhSachHocSinh(FILE* fp, SinhVien ds[], int &n)
+
+
+void DanhSachHocSinh(FILE* fp, SinhVien ds[], int n, TenThayThe& t)
 {
 	SinhVien sv;
-	n = 0;
+	int i = 0;
 	fseek(fp, 3, 1);
-	while (!feof(fp))
+	while (i<n)
 	{
-		if (DocMotSinhVien(fp, sv))
-		{
-			ds[n++] = sv;
-		}
-		else
-			break;
+		DocMotSinhVien(fp, sv);
+		ds[i] = sv;
+		i++;
 	}
+	docTungPhan(fp, t.s1, 50);
+	docTungPhan(fp, t.s2, 50);
+	docTungPhan(fp, t.s3, 50);
+	docTungPhan(fp, t.s4, 50);
+	docTungPhan(fp, t.s5, 50);
+	docTungPhan(fp, t.s6, 50);
+	docTungPhan(fp, t.s7, 50);
+	docTungPhan(fp, t.s8, 50);
+	docTungPhan(fp, t.s9, 100);
+	docTungPhan(fp, t.s10, 50);
+	docTungPhan(fp, t.s11, 50);
+	docTungPhan(fp, t.s12, 50);
+	docTungPhan(fp, t.s13, 50);
+	docTungPhan(fp, t.s14, 50);
+	docTungPhan(fp, t.s15, 50);
 }
+
 
 char *docFileHtm(FILE* fp, char *str)
 {
@@ -174,38 +209,40 @@ void InsertSubString(char* str, char* substr, int startPos)
 
 void TimKiemVaThayThe(char *s, char *s1, char *s2)
 {
-
+	
 	int n = strlen(s);
 	int n1 = strlen(s1);
 	int n2 = strlen(s2);
-	int pos = FindSubString(s, s1, 0);
-	
-	while (pos != EOF)
+	if (strcmp(s1, s2) != 0)
 	{
-		DeleteSubString(s, pos, n1);
-		InsertSubString(s, s2, pos);
-		int n = FindSubString(s, s1, pos);
-		pos = n;
+		int pos = FindSubString(s, s1, 0);
+		while (pos != EOF)
+		{
+			DeleteSubString(s, pos, n1);
+			InsertSubString(s, s2, pos);
+			int n = FindSubString(s, s1, pos);
+			pos = n;
+		}
 	}
-
-
+	else
+		return;
 }
 
-void XuatFileHtm(SinhVien x, char *s)
+void XuatFileHtm(SinhVien x, char *s,TenThayThe t)
 {
-	TimKiemVaThayThe(s, "Nguyen Van A", x.HoTen);
-	TimKiemVaThayThe(s, "NGUYEN VAN A", x.HoTen);
-	TimKiemVaThayThe(s, "1212123", x.MSSV);
-	TimKiemVaThayThe(s, "Cong nghe thong tin", x.Khoa);
-	TimKiemVaThayThe(s, "nva@gmail.com", x.Email);
-	TimKiemVaThayThe(s, "20/01/1994", x.NgaySinh);
-	TimKiemVaThayThe(s, "Am nhac: POP, Balad", x.SoThich);
-	TimKiemVaThayThe(s, "1212123", x.MSSV);
-	TimKiemVaThayThe(s, "Toi la mot nguoi rat than thien.", x.MoTa);
-	TimKiemVaThayThe(s, "Images/HinhCaNhan.jpg", x.HinhAnh);
-	TimKiemVaThayThe(s, "KHOA CONG NGHE THONG TIN", x.Khoa);
-	TimKiemVaThayThe(s, "MSSV ","1712882");
-	TimKiemVaThayThe(s, "Ten sinh vien thuc hien", "NguyÃªn Thanh TÃ¹ng");
+	TimKiemVaThayThe(s, t.s1, x.HoTen);
+	TimKiemVaThayThe(s, t.s2, x.HoTen);
+	TimKiemVaThayThe(s, t.s3, x.MSSV);
+	TimKiemVaThayThe(s, t.s4, x.Khoa);
+	TimKiemVaThayThe(s, t.s5, x.Email);
+	TimKiemVaThayThe(s, t.s6, x.NgaySinh);
+	TimKiemVaThayThe(s, t.s7, x.SoThich1);
+	TimKiemVaThayThe(s, t.s8, x.SoThich2);
+	TimKiemVaThayThe(s, t.s9, x.MoTa);
+	TimKiemVaThayThe(s, t.s10, x.HinhAnh);
+	TimKiemVaThayThe(s, t.s11, x.Khoa);
+	TimKiemVaThayThe(s, t.s12, t.s13);
+	TimKiemVaThayThe(s, t.s14, t.s15);
 
 
 	char filename[30];
@@ -216,13 +253,13 @@ void XuatFileHtm(SinhVien x, char *s)
 	fclose(fp);
 }
 
-void XuatAllFileHtm(FILE* fp, SinhVien ds[], int n)
+void XuatAllFileHtm(FILE* fp, SinhVien ds[], int n,TenThayThe t)
 {
 	for (int i = 0; i < n; i++)
 	{
 		char *s = (char*)malloc(6000 * sizeof(char));
 		docFileHtm(fp, s);
-		XuatFileHtm(ds[i], s);
+		XuatFileHtm(ds[i], s,t);
 		free(s);
 		rewind(fp);
 	}
@@ -230,8 +267,9 @@ void XuatAllFileHtm(FILE* fp, SinhVien ds[], int n)
 
 void main()
 {
-	int n;
+	int n=10;
 	SinhVien ds[Max_SinhVien];
+	TenThayThe t;
 	FILE* src;
 	fopen_s(&src, "myfile.csv", "rt");
 	if (src == NULL)
@@ -239,7 +277,7 @@ void main()
 		printf("File khong ton tai");
 		return;
 	}
-	DanhSachHocSinh(src, ds, n);
+	DanhSachHocSinh(src, ds, n,t);
 
 
 	FILE* htm;
@@ -250,7 +288,8 @@ void main()
 		return;
 	}
 
-	XuatAllFileHtm(htm, ds, n);
+	XuatAllFileHtm(htm, ds, n,t);
+
 
 	fclose(src);
 	fclose(htm);
