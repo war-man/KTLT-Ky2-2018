@@ -1,42 +1,48 @@
-﻿#include<stdio.h>
-#include<string>
+﻿#include <fcntl.h>
+#include <io.h>
+#include <stdio.h>
+#include <string>
+#include <stdlib.h>
+#include <wchar.h>
+
+
 const int Max_length = 256;
 const int Max_SinhVien = 15;
 
 struct SinhVien
 {
-	char MSSV[10];
-	char HoTen[100];
-	char Khoa[100];
+	wchar_t MSSV[10];
+	wchar_t HoTen[100];
+	wchar_t Khoa[100];
 	int KhoaHoc;
-	char NgaySinh[100];
-	char HinhAnh[100];
-	char MoTa[100];
-	char SoThich1[50];
-	char SoThich2[50];
-	char Email[20];
+	wchar_t NgaySinh[100];
+	wchar_t HinhAnh[100];
+	wchar_t MoTa[100];
+	wchar_t SoThich1[50];
+	wchar_t SoThich2[50];
+	wchar_t Email[20];
 };
 
 struct TenThayThe
 {
-	char s1[30];
-	char s2[30];
-	char s3[30];
-	char s4[30];
-	char s5[30];
-	char s6[30];
-	char s7[30];
-	char s8[50];
-	char s9[100];
-	char s10[30];
-	char s11[30];
-	char s12[30];
-	char s13[30];
-	char s14[30];
-	char s15[30];
+	wchar_t s1[30];
+	wchar_t s2[30];
+	wchar_t s3[30];
+	wchar_t s4[30];
+	wchar_t s5[30];
+	wchar_t s6[30];
+	wchar_t s7[30];
+	wchar_t s8[50];
+	wchar_t s9[100];
+	wchar_t s10[30];
+	wchar_t s11[30];
+	wchar_t s12[30];
+	wchar_t s13[30];
+	wchar_t s14[30];
+	wchar_t s15[30];
 };
 
-char *docTungPhan(FILE* src, char *str, int maxSize)
+wchar_t *docTungPhan(FILE* src, wchar_t *str, int maxSize)
 {
 	int ch, len;
 	if (feof(src))
@@ -57,7 +63,7 @@ char *docTungPhan(FILE* src, char *str, int maxSize)
 }
 void DocMotSinhVien(FILE* fp, SinhVien& sv)
 {
-	char ch;
+	wchar_t ch;
 	docTungPhan(fp, sv.MSSV, 10);
 
 	docTungPhan(fp, sv.HoTen, 30);
@@ -113,7 +119,7 @@ void DanhSachHocSinh(FILE* fp, SinhVien ds[], int n, TenThayThe& t)
 }
 
 
-char *docFileHtm(FILE* fp, char *str)
+wchar_t *docFileHtm(FILE* fp, wchar_t *str)
 {
 	int ch, len;
 	if (feof(fp))
@@ -134,7 +140,7 @@ char *docFileHtm(FILE* fp, char *str)
 	return str;
 }
 
-int StringLength(char *s)
+int StringLength(wchar_t *s)
 {
 	int i = 0;
 	while (*(s + i) != '\0')
@@ -143,7 +149,7 @@ int StringLength(char *s)
 	}
 	return i;
 }
-int FindSubString(char* str, char* substr, int startPos)
+int FindSubString(wchar_t* str, wchar_t* substr, int startPos)
 {
 	int length = StringLength(str);
 	int length1 = StringLength(substr);
@@ -163,19 +169,19 @@ int FindSubString(char* str, char* substr, int startPos)
 	return -1;
 }
 
-void DeleteSubString(char* src, int startPos, int numChar)
+void DeleteSubString(wchar_t* src, int startPos, int numwchar_t)
 {
 	int length = StringLength(src);
-	for (int i = startPos; i < length - numChar; i++)
+	for (int i = startPos; i < length - numwchar_t; i++)
 	{
-		src[i] = src[i + numChar];
+		src[i] = src[i + numwchar_t];
 	}
-	src[length - numChar] = '\0';
+	src[length - numwchar_t] = '\0';
 }
 
-char* StringCopy(char* dest, char* src)
+wchar_t* StringCopy(wchar_t* dest, wchar_t* src)
 {
-	int LengthSrc = strlen(src);
+	int LengthSrc = StringLength(src);
 	int i = 0;
 	while (i < LengthSrc)
 	{
@@ -186,16 +192,16 @@ char* StringCopy(char* dest, char* src)
 	return dest;
 }
 
-void InsertSubString(char* str, char* substr, int startPos)
+void InsertSubString(wchar_t* str, wchar_t* substr, int startPos)
 {
-	int length = strlen(str);
-	int sublength = strlen(substr);
+	int length = StringLength(str);
+	int sublength = StringLength(substr);
 	if (startPos > length)
 		startPos = length;
 	if (startPos < length)
 	{
-		char* temp;
-		temp = (char*)malloc((length - startPos + 1) * sizeof(char));
+		wchar_t* temp;
+		temp = (wchar_t*)malloc((length - startPos + 1) * sizeof(wchar_t));
 		StringCopy(temp, str + startPos);
 		StringCopy(str + startPos, substr);
 		StringCopy(str + startPos + sublength, temp);
@@ -207,13 +213,13 @@ void InsertSubString(char* str, char* substr, int startPos)
 	}
 }
 
-void TimKiemVaThayThe(char *s, char *s1, char *s2)
+void TimKiemVaThayThe(wchar_t *s, wchar_t *s1, wchar_t *s2)
 {
-	
-	int n = strlen(s);
-	int n1 = strlen(s1);
-	int n2 = strlen(s2);
-	if (strcmp(s1, s2) != 0)
+
+	int n = StringLength(s);
+	int n1 = StringLength(s1);
+	int n2 = StringLength(s2);
+	if (wcscmp(s1, s2) != 0)
 	{
 		int pos = FindSubString(s, s1, 0);
 		while (pos != EOF)
@@ -228,7 +234,7 @@ void TimKiemVaThayThe(char *s, char *s1, char *s2)
 		return;
 }
 
-void XuatFileHtm(SinhVien x, char *s,TenThayThe t)
+void XuatFileHtm(SinhVien x, wchar_t *s, TenThayThe t)
 {
 	TimKiemVaThayThe(s, t.s1, x.HoTen);
 	TimKiemVaThayThe(s, t.s2, x.HoTen);
@@ -245,21 +251,21 @@ void XuatFileHtm(SinhVien x, char *s,TenThayThe t)
 	TimKiemVaThayThe(s, t.s14, t.s15);
 
 
-	char filename[30];
-	strcpy(filename, x.MSSV);
-	strcat(filename, ".htm");
-	FILE*fp = fopen(filename, "w");
-	fputs(s, fp);
+	wchar_t filename[30];
+	wcscpy(filename, x.MSSV);
+	wcscat(filename, L".htm");
+	FILE*fp = _wfopen(filename, L"w");
+	fputws(s, fp);
 	fclose(fp);
 }
 
-void XuatAllFileHtm(FILE* fp, SinhVien ds[], int n,TenThayThe t)
+void XuatAllFileHtm(FILE* fp, SinhVien ds[], int n, TenThayThe t)
 {
 	for (int i = 0; i < n; i++)
 	{
-		char *s = (char*)malloc(6000 * sizeof(char));
+		wchar_t *s = (wchar_t*)malloc(6000 * sizeof(wchar_t));
 		docFileHtm(fp, s);
-		XuatFileHtm(ds[i], s,t);
+		XuatFileHtm(ds[i], s, t);
 		free(s);
 		rewind(fp);
 	}
@@ -267,28 +273,29 @@ void XuatAllFileHtm(FILE* fp, SinhVien ds[], int n,TenThayThe t)
 
 void main()
 {
-	int n=10;
+	_setmode(_fileno(stdout), _O_U16TEXT);
+	_setmode(_fileno(stdin), _O_U16TEXT);
+
+	int n = 10;
 	SinhVien ds[Max_SinhVien];
 	TenThayThe t;
-	FILE* src;
-	fopen_s(&src, "myfile.csv", "rt");
+	FILE* src= _wfopen(L"myfile.csv", L"rt");
 	if (src == NULL)
 	{
-		printf("File khong ton tai");
+		wprintf(L"File khong ton tai");
 		return;
 	}
-	DanhSachHocSinh(src, ds, n,t);
+	DanhSachHocSinh(src, ds, n, t);
 
 
-	FILE* htm;
-	fopen_s(&htm, "1212123.htm", "rt");
+	FILE* htm = _wfopen(L"1212123.htm", L"rt");
 	if (htm == NULL)
 	{
-		printf("File khong ton tai");
+		wprintf(L"File khong ton tai");
 		return;
 	}
 
-	XuatAllFileHtm(htm, ds, n,t);
+	XuatAllFileHtm(htm, ds, n, t);
 
 
 	fclose(src);
