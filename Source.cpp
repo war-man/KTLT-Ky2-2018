@@ -9,7 +9,7 @@
 #define Max_length  256
 #define Max_SinhVien  15
 
-struct SinhVien
+struct SinhVien    // Trường thông tin cần lưu
 {
 	wchar_t MSSV[10];
 	wchar_t HoTen[100];
@@ -23,7 +23,7 @@ struct SinhVien
 	wchar_t Email[20];
 };
 
-wchar_t *docTungPhan(FILE* src, wchar_t *str, int maxSize)
+wchar_t *docTungPhan(FILE* src, wchar_t *str, int maxSize)   // Hàm xử lý token
 {
 	wint_t ch;
 	int len;
@@ -44,7 +44,7 @@ wchar_t *docTungPhan(FILE* src, wchar_t *str, int maxSize)
 	return str;
 }
 
-int DocMotSinhVien(FILE* fp, SinhVien& sv)
+int DocMotSinhVien(FILE* fp, SinhVien& sv)   // Hàm đọc từng dòng thông tin của một sinh viên
 {
 	docTungPhan(fp, sv.MSSV, 7);
 
@@ -71,7 +71,7 @@ int DocMotSinhVien(FILE* fp, SinhVien& sv)
 	return 1;
 }
 
-void DanhSachHocSinh(FILE* fp, SinhVien ds[], int &n)
+void DanhSachSinhVien(FILE* fp, SinhVien ds[], int &n)    // Đọc thông tin sinh viên từ file vào trường từ đó suy ra số lượng sinh viên
 {
 	SinhVien sv;
 	n = 0;
@@ -86,7 +86,7 @@ void DanhSachHocSinh(FILE* fp, SinhVien ds[], int &n)
 	}
 }
 
-void docFileHtm(FILE* fp, wchar_t*&str)
+void docFileHtm(FILE* fp, wchar_t*&str)     // Đọc thông tin file vào một chuỗi
 {
 	wchar_t ch;
 	int i = 0;
@@ -99,7 +99,7 @@ void docFileHtm(FILE* fp, wchar_t*&str)
 	}
 }
 
-int FindSubString(wchar_t* str, wchar_t* substr, int startPos)
+int FindSubString(wchar_t* str, wchar_t* substr, int startPos)   // Tìm chuỗi cha trong chuỗi con từ vị trí cho trước
 {
 	int length = wcslen(str);
 	int length1 = wcslen(substr);
@@ -119,7 +119,7 @@ int FindSubString(wchar_t* str, wchar_t* substr, int startPos)
 	return -1;
 }
 
-void DeleteSubString(wchar_t* src, int startPos, int numwchar_t)
+void DeleteSubString(wchar_t* src, int startPos, int numwchar_t)  // Xóa số kí tự trong chuỗi từ một vị trí
 {
 	int length = wcslen(src);
 	for (int i = startPos; i < length - numwchar_t; i++)
@@ -129,7 +129,7 @@ void DeleteSubString(wchar_t* src, int startPos, int numwchar_t)
 	src[length - numwchar_t] = '\0';
 }
 
-void InsertSubString(wchar_t* str, wchar_t* substr, int startPos)
+void InsertSubString(wchar_t* str, wchar_t* substr, int startPos) // Chèn chuỗi vào vị trí xác định cho trước
 {
 	int length = wcslen(str);
 	int sublength = wcslen(substr);
@@ -150,7 +150,7 @@ void InsertSubString(wchar_t* str, wchar_t* substr, int startPos)
 
 }
 
-int CountMatches(wchar_t* str, wchar_t *substr)
+int CountMatches(wchar_t* str, wchar_t *substr)   // Đếm sự xuất hiện của chuỗi cha trong chuỗi con
 {
 	int length1 = wcslen(str);
 	int length2 = wcslen(substr);
@@ -174,9 +174,9 @@ void TimKiemVaThayThe(wchar_t *s, wchar_t *s1, wchar_t *s2)
 {
 
 	int n1 = wcslen(s1);
-	int pos = FindSubString(s, s1, 0);
+	int pos = FindSubString(s, s1, 0);   // Tìm vị trí giống đầu tiên
 	int x, i = 0;
-	int count = CountMatches(s, s1);
+	int count = CountMatches(s, s1);    // Đếm số lần xuất hiện
 	while (i<count)
 	{
 		DeleteSubString(s, pos, n1);
@@ -190,7 +190,7 @@ void TimKiemVaThayThe(wchar_t *s, wchar_t *s1, wchar_t *s2)
 void XuatFileHtm(SinhVien x, wchar_t* s)
 {
 	wchar_t filename[30];
-	wcscpy(filename, x.MSSV);
+	wcscpy(filename, x.MSSV);                     // Tạo file MSSV.htm 
 	wcscat(filename, L".htm");
 	FILE*fp = _wfopen(filename, L"wt,ccs=UTF-8");
 
@@ -201,7 +201,7 @@ void XuatFileHtm(SinhVien x, wchar_t* s)
 	TimKiemVaThayThe(s1, L"1212123", x.MSSV);
 	TimKiemVaThayThe(s1, L"Công nghệ thông tin", x.Khoa);
 	TimKiemVaThayThe(s1, L"nva@gmail.com", x.Email);
-	TimKiemVaThayThe(s1, L"20/01/1994", x.NgaySinh);
+	TimKiemVaThayThe(s1, L"20/01/1994", x.NgaySinh);                // Thay thế các thông tin từ chuỗi gốc
 	TimKiemVaThayThe(s1, L"Âm nhạc: POP, Balad", x.SoThich1);
 	TimKiemVaThayThe(s1, L"Ẩm thực: bún riêu, bún thịt nướng", x.SoThich2);
 	TimKiemVaThayThe(s1, L"Tôi là một người rất thân thiện.", x.MoTa);
@@ -227,7 +227,7 @@ void wmain()
 		printf("File khong ton tai");
 		return;
 	}
-	DanhSachHocSinh(src, ds, n);
+	DanhSachSinhVien(src, ds, n);
 
 	FILE* htm = _wfopen(L"1212123.htm", L"rt,ccs=UTF-8");
 	if (htm == NULL)
@@ -240,7 +240,7 @@ void wmain()
 	wchar_t*s = NULL;
 	docFileHtm(htm, s);
 
-	for (int i = 0; i<n; i++)
+	for (int i = 0; i<n; i++)      // Xuất tất cả file htm sinh viên
 		XuatFileHtm(ds[i], s);
 
 	wprintf(L"Số sinh viên trong danh sách : %d\n", n);
